@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-$sessionPath = dirname(__DIR__) . '/storage/sessions';
+$sessionPath = dirname(__DIR__) . '/storage/framework/sessions';
 if (!is_dir($sessionPath)) {
     mkdir($sessionPath, 0775, true);
 }
@@ -24,6 +24,5 @@ spl_autoload_register(function (string $class): void {
     }
 });
 
-require dirname(__DIR__) . '/src/data.php';
-require dirname(__DIR__) . '/src/components.php';
-
+require dirname(__DIR__) . '/app/Support/functions.php';
+require dirname(__DIR__) . '/resources/views/components.php';

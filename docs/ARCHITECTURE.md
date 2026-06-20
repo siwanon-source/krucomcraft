@@ -6,6 +6,7 @@ KruComCraft is now organized as a PHP MVC-style application that can run on XAMP
 
 ```text
 index.php
+  -> public/index.php
   -> bootstrap/app.php
   -> App\Http\Kernel
   -> config/routes.php
@@ -13,19 +14,21 @@ index.php
   -> App\Http\Requests\*
   -> App\Services\*
   -> App\Repositories\*
-  -> src/components.php
-  -> storage/*.json
+  -> resources/views/components.php
+  -> storage/app/data/*.json
 ```
 
 ## Layers
 
 ### Front Controller
 
-`index.php` is intentionally small. It only boots the application and passes the request to `App\Http\Kernel`.
+`public/index.php` is the real front controller for PHP 8.3 document-root deployments.
+
+The root `index.php` is a compatibility shim for existing XAMPP URLs such as `http://localhost/KruComCraft/`.
 
 ### Bootstrap
 
-`bootstrap/app.php` starts sessions, registers the autoloader, and loads legacy-compatible view/data functions.
+`bootstrap/app.php` starts sessions in `storage/framework/sessions`, registers the autoloader, and loads native PHP view/data helper functions.
 
 ### Config
 
@@ -75,17 +78,18 @@ Repositories isolate data access. Current storage still uses JSON files, but thi
 
 ### Views And Components
 
-`src/components.php` contains the current PHP component/view functions. In Laravel this maps to Blade layouts, pages, and components.
+`resources/views/components.php` contains the current PHP component/view functions. In Laravel this maps to Blade layouts, pages, and components.
 
 ## Storage
 
 Current storage is JSON-based:
 
-- `storage/users.json`
-- `storage/custom_courses.json`
-- `storage/enrollments.json`
-- `storage/grades.json`
-- `storage/audit_logs.json`
+- `storage/app/data/users.json`
+- `storage/app/data/custom_courses.json`
+- `storage/app/data/enrollments.json`
+- `storage/app/data/grades.json`
+- `storage/app/data/audit_logs.json`
+- `storage/app/data/learning_progress.json`
 
 This is acceptable for the local prototype, but production should use MySQL with migrations.
 
@@ -96,11 +100,12 @@ app/Http/Controllers/*     -> Laravel controllers
 app/Http/Requests/*        -> Laravel FormRequest classes
 app/Services/*             -> Laravel app/Services
 app/Repositories/*         -> Eloquent repositories or direct model queries
+public/index.php           -> Laravel public/index.php
 config/routes.php          -> routes/web.php
 config/page_meta.php       -> config/page_meta.php or view composers
-src/components.php         -> resources/views + Blade components
-src/data.php seed arrays   -> database/seeders
-storage/*.json             -> MySQL tables
+resources/views/components.php -> resources/views + Blade components
+app/Support/functions.php seed arrays -> database/seeders/services
+storage/app/data/*.json    -> MySQL tables
 ```
 
 ## Target Database Tables

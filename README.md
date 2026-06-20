@@ -4,16 +4,22 @@
 
 ## Run
 
-เปิดผ่าน XAMPP:
+เปิดผ่าน XAMPP แบบเดิม:
 
 ```text
 http://localhost/KruComCraft/
 ```
 
+หรือชี้ document root ไปที่ `public/` ตามมาตรฐาน PHP:
+
+```text
+http://localhost/KruComCraft/public/
+```
+
 หรือรันด้วย PHP built-in server:
 
 ```bash
-php -S 127.0.0.1:8090 -t .
+php -S 127.0.0.1:8090 -t public
 ```
 
 แล้วเข้า:
@@ -77,6 +83,8 @@ Role ถูกผูกกับ session และตรวจ permission ก่
 
 ```text
 index.php
+public/index.php
+public/assets/
 bootstrap/app.php
 config/routes.php
 config/page_meta.php
@@ -85,9 +93,10 @@ app/Http/Controllers/
 app/Http/Requests/
 app/Services/
 app/Repositories/
-src/components.php
-src/data.php
-storage/*.json
+app/Support/functions.php
+resources/views/components.php
+storage/app/data/*.json
+storage/framework/sessions/
 ```
 
 อ่านรายละเอียดได้ที่ `docs/ARCHITECTURE.md`
@@ -101,6 +110,6 @@ storage/*.json
 - `app/Services/*` -> Laravel services
 - `app/Repositories/*` -> Eloquent repositories หรือ model query layer
 - `config/routes.php` -> `routes/web.php`
-- `src/components.php` -> Blade layouts/components/pages
-- `src/data.php` seed arrays -> database seeders
-- `storage/*.json` -> database tables เช่น courses, students, assignments, grades, audit_logs
+- `resources/views/components.php` -> Blade layouts/components/pages
+- `app/Support/functions.php` seed arrays -> database seeders/services
+- `storage/app/data/*.json` -> database tables เช่น courses, students, assignments, grades, audit_logs

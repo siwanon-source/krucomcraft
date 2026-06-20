@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 function kru_storage_path(string $name): string
 {
-    $dir = __DIR__ . '/../storage';
+    $dir = dirname(__DIR__, 2) . '/storage/app/data';
     if (!is_dir($dir)) {
         mkdir($dir, 0775, true);
     }
@@ -394,7 +394,7 @@ function kru_store_avatar(array $file, string $email): string
         return 'ไฟล์ที่อัปโหลดไม่ใช่รูปภาพ';
     }
 
-    $dir = __DIR__ . '/../assets/uploads/avatars';
+    $dir = dirname(__DIR__, 2) . '/public/assets/uploads/avatars';
     if (!is_dir($dir)) {
         mkdir($dir, 0775, true);
     }

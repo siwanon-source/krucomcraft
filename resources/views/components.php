@@ -6,6 +6,23 @@ function e(string|int|null $value): string
     return htmlspecialchars((string)$value, ENT_QUOTES, 'UTF-8');
 }
 
+function app_root_path(string $path = ''): string
+{
+    return dirname(__DIR__, 2) . ($path !== '' ? DIRECTORY_SEPARATOR . ltrim(str_replace(['/', '\\'], DIRECTORY_SEPARATOR, $path), DIRECTORY_SEPARATOR) : '');
+}
+
+function public_path(string $path = ''): string
+{
+    return app_root_path('public' . ($path !== '' ? DIRECTORY_SEPARATOR . ltrim(str_replace(['/', '\\'], DIRECTORY_SEPARATOR, $path), DIRECTORY_SEPARATOR) : ''));
+}
+
+function asset_url(string $path): string
+{
+    $scriptDir = str_replace('\\', '/', dirname((string)($_SERVER['SCRIPT_NAME'] ?? '')));
+    $prefix = str_ends_with($scriptDir, '/public') ? 'assets/' : 'public/assets/';
+    return $prefix . ltrim($path, '/');
+}
+
 function icon(string $name): string
 {
     $icons = [
@@ -54,8 +71,8 @@ function render_layout(string $route, array $meta, array $data, ?string $flash):
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&family=Sarabun:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <link rel="icon" type="image/svg+xml" href="assets/brand/KruComCraft_logo_mark.svg">
-    <link rel="stylesheet" href="assets/css/app.css?v=<?= e((string)filemtime(__DIR__ . '/../assets/css/app.css')) ?>">
+    <link rel="icon" type="image/svg+xml" href="<?= e(asset_url('brand/KruComCraft_logo_mark.svg')) ?>">
+    <link rel="stylesheet" href="<?= e(asset_url('css/app.css')) ?>?v=<?= e((string)filemtime(public_path('assets/css/app.css'))) ?>">
 </head>
 <body>
     <?php render_top_auth_action($route, $data); ?>
@@ -65,7 +82,7 @@ function render_layout(string $route, array $meta, array $data, ?string $flash):
         <?php if ($flash): ?><div class="flash"><?= e($flash) ?></div><?php endif; ?>
         <?php render_page($route, $data); ?>
     </main>
-    <script src="assets/js/app.js"></script>
+    <script src="<?= e(asset_url('js/app.js')) ?>"></script>
 </body>
 </html><?php
 }
@@ -74,7 +91,7 @@ function render_header_hero(array $meta): void
 {
     ?><header class="hero">
         <div class="hero-brand-lockup">
-            <img src="assets/brand/KruComCraft_logo_mark.svg" alt="KruComCraft logo">
+            <img src="<?= e(asset_url('brand/KruComCraft_logo_mark.svg')) ?>" alt="KruComCraft logo">
             <div>
                 <h1 class="brand-title"><span class="brand-kru">Kru</span><span class="brand-com">Com</span><span class="brand-craft">Craft</span></h1>
                 <div class="brand-micro">CODE <span></span> CREATE <span></span> CONNECT</div>
@@ -93,7 +110,11 @@ function role_label(array $data, string $role): string
 function avatar_src(array $user): string
 {
     $avatar = (string)($user['avatar'] ?? '');
-    return $avatar !== '' ? $avatar : 'assets/brand/default-profile.svg';
+    if ($avatar !== '') {
+        $normalized = str_starts_with($avatar, 'public/assets/') ? substr($avatar, strlen('public/assets/')) : str_replace('assets/', '', $avatar);
+        return asset_url($normalized);
+    }
+    return asset_url('brand/default-profile.svg');
 }
 
 function render_top_auth_action(string $active, array $data): void
@@ -161,7 +182,7 @@ function render_sticky_nav(string $active, array $data): void
     ?><nav class="sticky-nav" aria-label="Primary navigation">
         <div class="nav-inner">
             <a class="nav-brand" href="?page=dashboard" aria-label="KruComCraft home">
-                <img src="assets/brand/KruComCraft_logo_mark.svg" alt="">
+                <img src="<?= e(asset_url('brand/KruComCraft_logo_mark.svg')) ?>" alt="">
                 <span>KruComCraft</span>
             </a>
             <div class="nav-links">
@@ -774,8 +795,8 @@ function page_register(array $data): void
             <div class="admin-list">
                 <span><strong>School student</strong> เข้าถึงคอร์สในโรงเรียนตามห้องเรียน/รายวิชา</span>
                 <span><strong>Public learner</strong> ลงทะเบียนคอร์ส public paid และรอชำระเงิน</span>
-                <span><strong>Persistent users</strong> บันทึกบัญชีลง storage/users.json</span>
-                <span><strong>Enrollments</strong> บันทึกการลงทะเบียนลง storage/enrollments.json</span>
+                <span><strong>Persistent users</strong> บันทึกบัญชีลง storage/app/data/users.json</span>
+                <span><strong>Enrollments</strong> บันทึกการลงทะเบียนลง storage/app/data/enrollments.json</span>
             </div>
         </article>
     </section><?php

@@ -1,4 +1,3 @@
-storage/sessions/*
-assets/uploads/avatars/*
-!assets/uploads/avatars/.gitkeep
-
+storage/framework/sessions/*
+public/assets/uploads/avatars/*
+!public/assets/uploads/avatars/.gitkeep
