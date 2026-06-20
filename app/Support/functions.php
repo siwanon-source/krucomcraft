@@ -494,6 +494,44 @@ function kru_can(string $permission, ?array $user = null): bool
     return in_array($permission, $permissions, true);
 }
 
+function kru_settings(): array
+{
+    return kru_json_read('settings', ['current_term' => '2/2568']);
+}
+
+function kru_current_term(array $courses = []): string
+{
+    $settings = kru_settings();
+    $current = (string)($settings['current_term'] ?? '');
+    if ($current !== '') {
+        return $current;
+    }
+
+    $terms = array_values(array_unique(array_map(fn (array $course): string => (string)($course['term'] ?? ''), $courses)));
+    rsort($terms);
+    return $terms[0] ?? '2/2568';
+}
+
+function kru_set_current_term(array $input): string
+{
+    if (!kru_can('manage_courses')) {
+        return 'ไม่มีสิทธิ์ตั้งค่าภาคเรียนปัจจุบัน';
+    }
+
+    $term = trim((string)($input['current_term'] ?? ''));
+    $terms = array_values(array_unique(array_map(fn (array $course): string => (string)($course['term'] ?? ''), kru_data()['courses'] ?? [])));
+    if ($term === '' || !in_array($term, $terms, true)) {
+        return 'ภาคเรียนที่เลือกไม่ถูกต้อง';
+    }
+
+    $settings = kru_settings();
+    $settings['current_term'] = $term;
+    $settings['current_term_updated_at'] = date('Y-m-d H:i');
+    $settings['current_term_updated_by'] = (string)(kru_current_user()['email'] ?? '');
+    kru_json_write('settings', $settings);
+    return 'ตั้งค่าภาคเรียนปัจจุบันเรียบร้อย';
+}
+
 function kru_json_read(string $name, array $fallback): array
 {
     $path = kru_storage_path($name);
@@ -518,6 +556,7 @@ function kru_data(): array
     $seed['users'] = kru_users();
     $seed['enrollments'] = kru_json_read('enrollments', []);
     $seed['learning_progress'] = kru_json_read('learning_progress', []);
+    $seed['settings'] = kru_settings();
     $seed['grades'] = kru_json_read('grades', [
         ['student' => 'STU-001', 'assignment' => 'ASN-101', 'score' => 9, 'status' => 'ผ่าน', 'note' => 'ส่งตรงเวลา', 'updated_at' => '2569-06-17 09:20'],
         ['student' => 'STU-014', 'assignment' => 'ASN-205', 'score' => 16, 'status' => 'รอตรวจซ้ำ', 'note' => 'ต้องปรับ sensor', 'updated_at' => '2569-06-17 10:05'],

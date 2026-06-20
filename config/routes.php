@@ -12,5 +12,6 @@ return [
         'create_course' => [App\Http\Controllers\CourseController::class, 'store'],
         'mark_lesson_complete' => [App\Http\Controllers\LearningProgressController::class, 'store'],
         'update_profile' => [App\Http\Controllers\ProfileController::class, 'update'],
+        'set_current_term' => [App\Http\Controllers\SettingsController::class, 'currentTerm'],
     ],
 ];

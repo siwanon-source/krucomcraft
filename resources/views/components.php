@@ -487,37 +487,38 @@ function page_school_student_courses(array $data): void
     }
     uksort($terms, fn (string $a, string $b): int => school_course_sort_key($b) <=> school_course_sort_key($a));
 
+    $currentTerm = kru_current_term($courses);
     $activeTerm = (string)($_GET['term'] ?? '');
     if ($activeTerm === '' || !isset($terms[$activeTerm])) {
-        $activeTerm = (string)array_key_first($terms);
+        $activeTerm = isset($terms[$currentTerm]) ? $currentTerm : (string)array_key_first($terms);
     }
+    $isCurrentTerm = $activeTerm === $currentTerm;
 
     $termCourses = array_values(array_filter($courses, fn (array $course): bool => (string)($course['term'] ?? '') === $activeTerm));
     $lessonTotal = array_sum(array_map(fn (array $course): int => count(school_course_lessons($course, $data)), $termCourses));
     $videoTotal = array_sum(array_map(fn (array $course): int => count(array_filter(school_course_lessons($course, $data), fn (array $lesson): bool => strtolower((string)$lesson['type']) === 'video')), $termCourses));
     $labTotal = array_sum(array_map(fn (array $course): int => count(array_filter(school_course_lessons($course, $data), fn (array $lesson): bool => in_array(strtolower((string)$lesson['type']), ['lab', 'งาน', 'quiz'], true))), $termCourses));
-    $courseTabs = array_slice($termCourses, 0, 5);
 
     ?><section class="school-term-shell">
-        <div class="school-term-title">เทอม <?= e($activeTerm) ?></div>
         <div class="school-term-hero">
-            <div class="hero-badge">ภาคเรียนที่ <?= e($activeTerm) ?> · กำลังดำเนินการ</div>
+            <div class="hero-badge school-term-status">ภาคเรียนที่ <?= e($activeTerm) ?><?= $isCurrentTerm ? ' · กำลังดำเนินการ' : '' ?></div>
             <h2>สื่อการสอน</h2>
             <div class="hero-gradient">กลุ่มสาระการเรียนรู้วิทยาศาสตร์และเทคโนโลยี</div>
             <p>รวมสื่อ เอกสาร กิจกรรมการเรียนรู้ และรายวิชาที่นักเรียนในโรงเรียนเข้าถึงได้ตามภาคเรียน</p>
-            <nav class="school-term-tabs" aria-label="เลือกภาคเรียน">
-                <a class="active" href="?page=courses&term=<?= e($activeTerm) ?>"><?= icon('media') ?>สื่อการสอน</a>
-                <a href="?page=dashboard"><?= icon('dashboard') ?>หน้าหลัก</a>
-                <?php foreach ($courseTabs as $course): ?>
-                    <a href="?page=learn&course=<?= e((string)$course['code']) ?>"><?= e((string)$course['code']) ?></a>
-                <?php endforeach; ?>
-            </nav>
+            <form method="get" class="school-term-picker">
+                <input type="hidden" name="page" value="courses">
+                <label>เลือกภาคเรียน
+                    <select name="term" onchange="this.form.submit()">
+                        <?php foreach (array_values($terms) as $term): ?>
+                            <option value="<?= e($term) ?>" <?= $term === $activeTerm ? 'selected' : '' ?>>ภาคเรียนที่ <?= e($term) ?><?= $term === $currentTerm ? ' · ปัจจุบัน' : '' ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </label>
+                <?php if ($activeTerm !== $currentTerm): ?>
+                    <a class="button ghost" href="?page=courses&term=<?= e($currentTerm) ?>"><?= icon('course') ?>กลับเทอมปัจจุบัน</a>
+                <?php endif; ?>
+            </form>
         </div>
-        <nav class="school-semester-tabs" aria-label="เลือกเทอม">
-            <?php foreach (array_values($terms) as $term): ?>
-                <a class="<?= $term === $activeTerm ? 'active' : '' ?>" href="?page=courses&term=<?= e($term) ?>">เทอม <?= e($term) ?></a>
-            <?php endforeach; ?>
-        </nav>
         <section class="stats-grid school-stats">
             <?php render_stat_card('c1', 'course', 'รายวิชา', count($termCourses), 'รายวิชาของภาคเรียน'); ?>
             <?php render_stat_card('c2', 'blog', 'สื่อการสอน', $lessonTotal, 'เอกสารและกิจกรรม'); ?>
@@ -778,6 +779,7 @@ function page_courses(array $data): void
     rsort($years);
     $terms = array_values(array_unique(array_map(fn (array $course): string => (string)($course['term'] ?? ''), $data['courses'])));
     rsort($terms);
+    $currentTerm = kru_current_term($data['courses']);
     $levels = array_values(array_unique(array_map('course_level', $data['courses'])));
     sort($levels);
     $classrooms = array_values(array_unique(array_map(fn (array $course): string => (string)($course['classroom'] ?? ''), $data['courses'])));
@@ -794,6 +796,19 @@ function page_courses(array $data): void
             <button class="button" type="submit"><?= icon('course') ?>กรองรายวิชา</button>
             <a class="button ghost" href="?page=courses"><?= icon('dashboard') ?>ล้างตัวกรอง</a>
         </form>
+        <?php if (kru_can('manage_courses', $user)): ?>
+            <form method="post" class="current-term-form">
+                <input type="hidden" name="action" value="set_current_term">
+                <label>เทอมปัจจุบัน
+                    <select name="current_term">
+                        <?php foreach ($terms as $term): ?>
+                            <option value="<?= e($term) ?>" <?= $term === $currentTerm ? 'selected' : '' ?>><?= e($term) ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </label>
+                <button class="button" type="submit"><?= icon('score') ?>ตั้งเป็นเทอมปัจจุบัน</button>
+            </form>
+        <?php endif; ?>
     </section>
     <section class="stats-grid">
         <?php render_stat_card('c1', 'course', 'รายวิชาที่เห็น', count($visibleCourses), $isSchoolStudent ? 'มุมมองนักเรียนใน class' : 'มุมมองรวม'); ?>

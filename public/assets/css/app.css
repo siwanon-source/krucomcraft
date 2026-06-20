@@ -680,6 +680,20 @@ h3 {
   margin: 18px 0 22px;
 }
 
+.current-term-form {
+  display: flex;
+  align-items: end;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+}
+
+.current-term-form label {
+  min-width: min(260px, 100%);
+}
+
 .course-access-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -717,23 +731,21 @@ h3 {
   border-radius: 16px;
 }
 
-.school-term-title {
-  margin: 4px 0 24px;
+.school-term-hero {
+  padding: 18px 16px 10px;
   text-align: center;
-  font-family: 'Kanit', sans-serif;
-  font-size: clamp(2.4rem, 7vw, 5rem);
-  font-weight: 300;
-  line-height: 1;
-  color: var(--text);
 }
 
-.school-term-hero {
-  padding: 28px 16px 10px;
-  text-align: center;
+.school-term-status {
+  min-height: 44px;
+  padding: 9px 18px;
+  font-size: clamp(1rem, 2vw, 1.35rem);
+  color: var(--accent1);
+  box-shadow: 0 16px 36px color-mix(in srgb, var(--accent1) 10%, transparent);
 }
 
 .school-term-hero h2 {
-  margin: 16px 0 2px;
+  margin: 20px 0 2px;
   font-size: clamp(2rem, 5vw, 3.5rem);
   line-height: 1.05;
 }
@@ -745,6 +757,7 @@ h3 {
   line-height: 1.7;
 }
 
+.school-term-picker,
 .school-term-tabs,
 .school-semester-tabs {
   display: flex;
@@ -752,6 +765,26 @@ h3 {
   justify-content: center;
   gap: 8px;
   flex-wrap: wrap;
+}
+
+.school-term-picker {
+  margin: 22px auto 0;
+}
+
+.school-term-picker label {
+  min-width: min(360px, 100%);
+  color: var(--muted);
+  text-align: left;
+  font-family: 'Kanit', sans-serif;
+  font-size: 0.88rem;
+}
+
+.school-term-picker select {
+  margin-top: 6px;
+  border-radius: 999px;
+  text-align: center;
+  color: var(--accent1);
+  font-family: 'Kanit', sans-serif;
 }
 
 .school-term-tabs {
