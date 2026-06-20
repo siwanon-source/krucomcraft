@@ -196,8 +196,10 @@ function render_sticky_nav(string $active, array $data): void
                     <?php render_type_badge((string)($user['color'] ?? 'c1'), role_label($data, (string)$user['role'])); ?>
                     <?php [$profileLabel, $profileIcon] = nav_items()['profile']; ?>
                     <a class="nav-admin <?= $active === 'profile' ? 'active' : '' ?>" href="?page=profile"><?= icon($profileIcon) ?><span><?= e($profileLabel) ?></span></a>
-                    <?php [$adminLabel, $adminIcon] = nav_items()['admin']; ?>
-                    <a class="nav-admin <?= $active === 'admin' ? 'active' : '' ?>" href="?page=admin"><?= icon($adminIcon) ?><span><?= e($adminLabel) ?></span></a>
+                    <?php if (kru_can('manage_courses', $user)): ?>
+                        <?php [$adminLabel, $adminIcon] = nav_items()['admin']; ?>
+                        <a class="nav-admin <?= $active === 'admin' ? 'active' : '' ?>" href="?page=admin"><?= icon($adminIcon) ?><span><?= e($adminLabel) ?></span></a>
+                    <?php endif; ?>
                     <form method="post" class="nav-logout">
                         <input type="hidden" name="action" value="logout">
                         <button class="nav-admin" type="submit"><?= icon('lock') ?><span>Logout</span></button>
@@ -537,6 +539,58 @@ function page_school_student_courses(array $data): void
     </section><?php
 }
 
+function page_guest_courses(array $data): void
+{
+    $terms = array_values(array_unique(array_map(fn (array $course): string => (string)($course['term'] ?? ''), $data['courses'] ?? [])));
+    rsort($terms);
+    $schoolCount = count($data['courses'] ?? []);
+    $publicCount = count(array_filter($data['academy'] ?? [], fn (array $course): bool => ($course['type'] ?? '') !== 'school'));
+
+    render_section_label(
+        'Course Access',
+        'รายวิชาของนักเรียนต้องเข้าสู่ระบบก่อน',
+        'ระบบแยกเส้นทางชัดเจน: นักเรียนในโรงเรียนเข้าสู่ระบบเพื่อดูรายวิชาตามเทอมและห้องเรียน ส่วนบุคคลทั่วไปไปที่คอร์สเรียนสาธารณะ'
+    );
+    ?><section class="course-access-grid">
+        <article class="card c1 course-access-card">
+            <div class="card-icon"><?= icon('course') ?></div>
+            <div>
+                <h3>นักเรียนในโรงเรียน</h3>
+                <p>เข้าสู่ระบบด้วยบัญชีนักเรียน แล้วระบบจะพาไปหน้ารายวิชาทันที แสดงแยกตามภาคเรียน เช่น เทอม <?= e($terms[0] ?? '2/2568') ?> พร้อมสื่อ ใบงาน และความคืบหน้า</p>
+                <div class="chip-row">
+                    <span><?= e($schoolCount) ?> รายวิชาในระบบ</span>
+                    <span>ล็อกตาม role และห้องเรียน</span>
+                </div>
+                <div class="course-actions">
+                    <a class="button" href="?page=login"><?= icon('lock') ?>เข้าสู่ระบบนักเรียน</a>
+                    <a class="button ghost" href="?page=register"><?= icon('user') ?>สมัครบัญชีนักเรียน</a>
+                </div>
+            </div>
+        </article>
+        <article class="card c4 course-access-card">
+            <div class="card-icon"><?= icon('paid') ?></div>
+            <div>
+                <h3>บุคคลทั่วไป</h3>
+                <p>ดูและลงทะเบียนคอร์สออนไลน์สาธารณะได้ ทั้งคอร์สฟรีและคอร์สเสียเงิน แต่ไม่สามารถเข้าเรียนรายวิชาที่ครูสอนในโรงเรียนได้</p>
+                <div class="chip-row">
+                    <span><?= e($publicCount) ?> คอร์สสาธารณะ</span>
+                    <span>ฟรี / ชำระเงิน</span>
+                </div>
+                <div class="course-actions">
+                    <a class="button" href="?page=academy"><?= icon('paid') ?>ดูคอร์สเรียน</a>
+                    <a class="button ghost" href="?page=register"><?= icon('user') ?>สมัครบุคคลทั่วไป</a>
+                </div>
+            </div>
+        </article>
+    </section>
+    <section class="stats-grid">
+        <?php render_stat_card('c1', 'course', 'หลัง Login', 'รายวิชา', 'นักเรียนไปหน้าเทอมอัตโนมัติ'); ?>
+        <?php render_stat_card('c2', 'lock', 'ก่อน Login', 'Access Gate', 'ยังไม่เห็นรายละเอียดในห้องเรียน'); ?>
+        <?php render_stat_card('c3', 'media', 'สื่อการสอน', 'Sync', 'เชื่อมเอกสาร สไลด์ VDO และใบงาน'); ?>
+        <?php render_stat_card('c4', 'score', 'Progress', 'จริง', 'คำนวณจากกิจกรรมที่เรียนแล้ว'); ?>
+    </section><?php
+}
+
 function render_chapter_row(array $chapter): void
 {
     ?><article class="chapter-row">
@@ -684,6 +738,11 @@ function page_dashboard(array $data): void
 function page_courses(array $data): void
 {
     $user = $data['current_user'];
+    if (($user['role'] ?? 'guest') === 'guest') {
+        page_guest_courses($data);
+        return;
+    }
+
     if (($user['user_type'] ?? '') === 'school_student') {
         page_school_student_courses($data);
         return;
@@ -960,24 +1019,52 @@ function page_booking(array $data): void
 
 function page_login(array $data): void
 {
-    render_section_label('Authentication', 'เข้าสู่ระบบผู้ดูแล', 'หน้าต้นแบบสำหรับ Teacher/Admin Dashboard');
+    $currentUser = $data['current_user'];
+    if (($currentUser['role'] ?? 'guest') !== 'guest') {
+        render_section_label('Already Signed In', 'คุณเข้าสู่ระบบอยู่แล้ว', 'เลือกไปหน้าที่ตรงกับสิทธิ์ของคุณ หรือออกจากระบบเพื่อเปลี่ยนบัญชี');
+        ?><section class="course-access-grid">
+            <article class="card <?= e((string)($currentUser['color'] ?? 'c1')) ?> course-access-card">
+                <div class="card-icon"><?= icon('user') ?></div>
+                <div>
+                    <h3><?= e((string)($currentUser['name'] ?? 'User')) ?></h3>
+                    <p><?= e((string)($currentUser['email'] ?? '')) ?> · <?= e(role_label($data, (string)($currentUser['role'] ?? 'guest'))) ?></p>
+                    <div class="course-actions">
+                        <?php if (($currentUser['user_type'] ?? '') === 'school_student'): ?>
+                            <a class="button" href="?page=courses"><?= icon('course') ?>ไปหน้ารายวิชา</a>
+                        <?php elseif (kru_can('manage_courses', $currentUser)): ?>
+                            <a class="button" href="?page=admin"><?= icon('score') ?>ไป Admin</a>
+                        <?php else: ?>
+                            <a class="button" href="?page=academy"><?= icon('paid') ?>ไปคอร์สเรียน</a>
+                        <?php endif; ?>
+                        <form method="post">
+                            <input type="hidden" name="action" value="logout">
+                            <button class="button ghost" type="submit"><?= icon('lock') ?>ออกจากระบบ</button>
+                        </form>
+                    </div>
+                </div>
+            </article>
+        </section><?php
+        return;
+    }
+
+    render_section_label('Authentication', 'เข้าสู่ระบบเพื่อเข้าเรียน', 'นักเรียนเข้าสู่ระบบแล้วไปหน้ารายวิชาตามเทอมทันที ส่วนครูและผู้ดูแลไปหน้า Admin Dashboard');
     ?><section class="split">
-        <article class="card c4">
-            <h3>Login by role</h3>
+        <article class="card c1">
+            <h3>เข้าสู่ระบบ</h3>
             <form method="post" class="form-grid">
                 <input type="hidden" name="action" value="login">
-                <label class="wide">อีเมล<input name="email" type="email" value="teacher@krucomcraft.local"></label>
-                <label class="wide">รหัสผ่าน<input name="password" type="password" value="password"></label>
+                <label class="wide">อีเมล<input name="email" type="email" placeholder="student@krucomcraft.local"></label>
+                <label class="wide">รหัสผ่าน<input name="password" type="password" placeholder="กรอกรหัสผ่าน"></label>
                 <button class="button" type="submit"><?= icon('lock') ?>เข้าสู่ระบบ</button>
                 <a class="button ghost" href="?page=register"><?= icon('user') ?>สมัครสมาชิก</a>
             </form>
         </article>
-        <article class="card c1">
-            <h3>Demo users</h3>
+        <article class="card c4">
+            <h3>ลำดับหลังเข้าสู่ระบบ</h3>
             <div class="admin-list">
-                <?php foreach ($data['users'] as $user): ?>
-                    <span><strong><?= e($user['role']) ?></strong><?= e($user['email']) ?> / password</span>
-                <?php endforeach; ?>
+                <span><strong>Student</strong> ไปหน้า รายวิชา เพื่อดูเทอม สื่อ ใบงาน และความคืบหน้าของตัวเอง</span>
+                <span><strong>Teacher/Admin</strong> ไปหน้า Admin Dashboard เพื่อจัดการรายวิชา นักเรียน สื่อ คะแนน และ QR</span>
+                <span><strong>Public learner</strong> ไปหน้าคอร์สเรียนสาธารณะ ลงทะเบียนฟรีหรือชำระเงินตามประเภทคอร์ส</span>
             </div>
         </article>
     </section><?php

@@ -17,7 +17,18 @@ final class AuthController
     public function login(array $input): ActionResult
     {
         $user = $this->auth->login(LoginRequest::from($input));
-        return new ActionResult($user ? 'admin' : 'login', $user ? "Logged in as {$user['role']}" : 'Invalid email or password');
+        if (!$user) {
+            return new ActionResult('login', 'Invalid email or password');
+        }
+
+        $route = match ($user['role'] ?? 'guest') {
+            'student' => 'courses',
+            'parent' => 'academy',
+            'teacher', 'admin' => 'admin',
+            default => 'dashboard',
+        };
+
+        return new ActionResult($route, "Logged in as {$user['role']}");
     }
 
     public function register(array $input): ActionResult

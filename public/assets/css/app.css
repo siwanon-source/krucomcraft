@@ -680,6 +680,30 @@ h3 {
   margin: 18px 0 22px;
 }
 
+.course-access-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+  margin-bottom: 24px;
+}
+
+.course-access-card {
+  display: grid;
+  grid-template-columns: 58px minmax(0, 1fr);
+  gap: 18px;
+  align-items: flex-start;
+}
+
+.course-access-card h3 {
+  margin-top: 2px;
+}
+
+.course-access-card p {
+  margin: 0 0 14px;
+  color: var(--muted);
+  line-height: 1.7;
+}
+
 .school-term-shell {
   max-width: 1120px;
   margin: 0 auto 48px;
@@ -1189,6 +1213,7 @@ select {
   .stats-grid,
   .feature-grid,
   .course-grid,
+  .course-access-grid,
   .school-course-grid,
   .permission-grid,
   .split {
@@ -1264,6 +1289,7 @@ select {
   .stats-grid,
   .feature-grid,
   .course-grid,
+  .course-access-grid,
   .school-course-grid,
   .permission-grid,
   .split,
@@ -1290,6 +1316,7 @@ select {
 
   .section-label,
   .chapter-row,
+  .course-access-card,
   .account-bar {
     display: grid;
   }
