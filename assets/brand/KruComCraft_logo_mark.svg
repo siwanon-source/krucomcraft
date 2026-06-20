@@ -1,0 +1,22 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+<title id="title">KruComCraft App Icon</title>
+<desc id="desc">Square advanced app icon for KruComCraft with K monogram, code bracket, and circuit nodes.</desc>
+<defs>
+<linearGradient id="kc_arc" x1="96" y1="86" x2="400" y2="415" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#2563EB"/><stop offset="0.58" stop-color="#0891B2"/><stop offset="1" stop-color="#059669"/></linearGradient>
+<linearGradient id="kc_k" x1="152" y1="132" x2="358" y2="372" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#2563EB"/><stop offset="0.48" stop-color="#2F6DF6"/><stop offset="1" stop-color="#7C3AED"/></linearGradient>
+<filter id="kc_shadow" x="46" y="46" width="420" height="420" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB"><feDropShadow dx="0" dy="28" stdDeviation="30" flood-color="#2563EB" flood-opacity="0.20"/></filter>
+</defs>
+<rect width="512" height="512" rx="116" fill="#F0F4FB"/>
+<g opacity="0.46"><path d="M64 128H448M64 192H448M64 256H448M64 320H448M64 384H448" stroke="#DBEAFE" stroke-width="2"/><path d="M128 64V448M192 64V448M256 64V448M320 64V448M384 64V448" stroke="#DBEAFE" stroke-width="2"/></g>
+<g filter="url(#kc_shadow)">
+<rect x="86" y="78" width="340" height="340" rx="86" fill="#FFFFFF" stroke="#E8EDF7" stroke-width="2"/>
+<path d="M382 137C349 101 305 84 256 84C161 84 84 161 84 256C84 351 161 428 256 428C310 428 358 403 389 365" stroke="url(#kc_arc)" stroke-width="28" stroke-linecap="round"/>
+<path d="M165 206H95" stroke="#2563EB" stroke-width="14" stroke-linecap="round"/><path d="M165 256H80" stroke="#7C3AED" stroke-width="14" stroke-linecap="round"/><path d="M165 306H95" stroke="#0891B2" stroke-width="14" stroke-linecap="round"/>
+<circle cx="95" cy="206" r="15" fill="#FFFFFF" stroke="#2563EB" stroke-width="10"/><circle cx="80" cy="256" r="15" fill="#FFFFFF" stroke="#7C3AED" stroke-width="10"/><circle cx="95" cy="306" r="15" fill="#FFFFFF" stroke="#0891B2" stroke-width="10"/>
+<path d="M198 154V358" stroke="url(#kc_k)" stroke-width="56" stroke-linecap="round"/>
+<path d="M220 256L332 154" stroke="url(#kc_k)" stroke-width="56" stroke-linecap="round"/>
+<path d="M220 258L338 356" stroke="url(#kc_k)" stroke-width="56" stroke-linecap="round"/>
+<path d="M356 198L414 256L356 314" stroke="#7C3AED" stroke-width="28" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="320" cy="256" r="26" fill="#7C3AED"/>
+</g>
+</svg>

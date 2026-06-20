@@ -1,0 +1,4 @@
+storage/sessions/*
+assets/uploads/avatars/*
+!assets/uploads/avatars/.gitkeep
+

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KruComCraft Logo Preview</title>
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&family=Sarabun:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f0f4fb;--card:#fff;--border:rgba(99,120,180,.14);--text:#1a2340;--muted:#6b7a99;--accent1:#2563eb;--accent2:#7c3aed;--accent3:#0891b2;--accent4:#059669}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding:42px}
+body:before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(37,99,235,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(37,99,235,.06) 1px,transparent 1px);background-size:40px 40px;pointer-events:none}
+.wrap{position:relative;z-index:1;max-width:1180px;margin:0 auto}.header{text-align:center;padding:28px 0 36px}.badge{display:inline-flex;align-items:center;gap:8px;background:rgba(37,99,235,.08);border:1px solid rgba(37,99,235,.25);padding:7px 18px;border-radius:100px;color:var(--accent1);font-family:'Kanit';font-size:13px;margin-bottom:18px}.badge:before{content:'';width:7px;height:7px;background:var(--accent1);border-radius:50%}
+h1{font-family:'Kanit';font-size:clamp(30px,5vw,54px);line-height:1.1;letter-spacing:-.7px;margin-bottom:10px}h1 span{background:linear-gradient(135deg,var(--accent1),var(--accent3));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}.subtitle{color:var(--muted);font-size:16px}
+.grid{display:grid;grid-template-columns:1.2fr .8fr;gap:20px}.card{background:rgba(255,255,255,.82);border:1px solid var(--border);border-radius:22px;padding:24px;box-shadow:0 20px 60px rgba(99,120,180,.13);backdrop-filter:blur(16px);overflow:hidden}.card h2{font-family:'Kanit';font-size:18px;font-weight:600;color:var(--accent1);margin-bottom:16px}.logo-box{display:flex;align-items:center;justify-content:center;border-radius:18px;background:#fff;border:1px solid var(--border);padding:18px;min-height:240px}.logo-box img{width:100%;height:auto;display:block}.icon-box{max-width:360px;margin:0 auto}.full{grid-column:1/-1}.mock{background:#07172a;color:#fff}.mock h2{color:#fff}.mock .logo-box{background:linear-gradient(135deg,#07172a,#0f2748);border-color:rgba(255,255,255,.12)}.palette{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.swatch{border:1px solid var(--border);border-radius:14px;padding:12px;background:#fff}.color{height:42px;border-radius:10px;margin-bottom:8px}.swatch b{font-family:'Kanit';font-size:13px}.swatch p{color:var(--muted);font-size:12px;margin-top:2px}
+@media(max-width:900px){body{padding:20px}.grid{grid-template-columns:1fr}.palette{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<section class="header">
+<div class="badge">KruComCraft Logo · Advanced Design</div>
+<h1>KruComCraft<br><span>Code · Create · Connect</span></h1>
+<p class="subtitle">ชุดโลโก้ SVG สำหรับเว็บไซต์ครูคอมพิวเตอร์ สื่อการสอน ตรวจงาน QR และแพลตฟอร์มคอร์สออนไลน์</p>
+</section>
+<section class="grid">
+<div class="card full"><h2>Horizontal Logo</h2><div class="logo-box"><img src="KruComCraft_logo_horizontal.svg" alt="KruComCraft horizontal logo"></div></div>
+<div class="card"><h2>App Icon / Favicon</h2><div class="logo-box icon-box"><img src="KruComCraft_logo_mark.svg" alt="KruComCraft app icon"></div></div>
+<div class="card"><h2>Wordmark</h2><div class="logo-box"><img src="KruComCraft_logo_wordmark.svg" alt="KruComCraft wordmark"></div></div>
+<div class="card mock full"><h2>Dark Mockup Usage</h2><div class="logo-box"><img src="KruComCraft_logo_horizontal.svg" alt="KruComCraft dark mockup"></div></div>
+<div class="card full"><h2>Color Palette</h2><div class="palette">
+<div class="swatch"><div class="color" style="background:#2563EB"></div><b>#2563EB</b><p>Primary Blue</p></div>
+<div class="swatch"><div class="color" style="background:#7C3AED"></div><b>#7C3AED</b><p>Craft Purple</p></div>
+<div class="swatch"><div class="color" style="background:#0891B2"></div><b>#0891B2</b><p>Tech Cyan</p></div>
+<div class="swatch"><div class="color" style="background:#059669"></div><b>#059669</b><p>Learning Green</p></div>
+</div></div>
+</section>
+</div>
+</body>
+</html>
