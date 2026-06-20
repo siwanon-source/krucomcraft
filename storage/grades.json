@@ -1,0 +1,18 @@
+[
+    {
+        "student": "STU-001",
+        "assignment": "ASN-101",
+        "score": 9,
+        "status": "ผ่าน",
+        "note": "ส่งตรงเวลา",
+        "updated_at": "2569-06-17 09:20"
+    },
+    {
+        "student": "STU-014",
+        "assignment": "ASN-205",
+        "score": 16,
+        "status": "รอตรวจซ้ำ",
+        "note": "ต้องปรับ sensor",
+        "updated_at": "2569-06-17 10:05"
+    }
+]

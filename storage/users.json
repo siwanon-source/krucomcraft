@@ -1,0 +1,34 @@
+[
+    {
+        "email": "admin@krucomcraft.local",
+        "password": "password",
+        "role": "admin",
+        "name": "System Admin",
+        "color": "c4"
+    },
+    {
+        "email": "teacher@krucomcraft.local",
+        "password": "password",
+        "role": "teacher",
+        "name": "Teacher KruComCraft",
+        "color": "c2"
+    },
+    {
+        "email": "student@krucomcraft.local",
+        "password": "password",
+        "role": "student",
+        "user_type": "school_student",
+        "name": "Demo Student",
+        "classroom": "ม.1\/2",
+        "student_id": "STU-001",
+        "color": "c1"
+    },
+    {
+        "email": "parent@krucomcraft.local",
+        "password": "password",
+        "role": "parent",
+        "user_type": "public",
+        "name": "Demo Parent",
+        "color": "c3"
+    }
+]
