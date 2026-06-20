@@ -345,6 +345,198 @@ function render_course_learning_card(array $course, array $data): void
     </article><?php
 }
 
+function school_course_sort_key(string $term): string
+{
+    if (str_contains($term, '/')) {
+        [$semester, $year] = array_pad(explode('/', $term, 2), 2, '0');
+        return sprintf('%04d%02d', (int)$year, (int)$semester);
+    }
+    return $term;
+}
+
+function school_course_lessons(array $course, array $data): array
+{
+    $courseCode = (string)($course['code'] ?? '');
+    $rows = [];
+
+    foreach (course_related_items($data['chapters'] ?? [], $courseCode) as $chapter) {
+        $rows[] = [
+            'title' => (string)($chapter['title'] ?? 'บทเรียน'),
+            'type' => (string)($chapter['type'] ?? 'Slide'),
+        ];
+    }
+    foreach (course_related_items($data['media'] ?? [], $courseCode) as $item) {
+        $rows[] = [
+            'title' => (string)($item['title'] ?? 'สื่อการสอน'),
+            'type' => (string)($item['type'] ?? 'PDF'),
+        ];
+    }
+    foreach (course_related_items($data['assignments'] ?? [], $courseCode) as $assignment) {
+        $rows[] = [
+            'title' => (string)($assignment['title'] ?? 'ใบงาน'),
+            'type' => 'งาน',
+        ];
+    }
+
+    if (count($rows) === 0) {
+        $name = (string)($course['name'] ?? '');
+        if (str_contains(strtolower($courseCode . ' ' . $name), 'ai')) {
+            $rows = [
+                ['title' => 'รู้จัก AI และการใช้งานอย่างรับผิดชอบ', 'type' => 'Slide'],
+                ['title' => 'Prompt เบื้องต้นสำหรับงานเรียน', 'type' => 'Video'],
+                ['title' => 'ฝึกใช้ AI วิเคราะห์โจทย์', 'type' => 'Lab'],
+                ['title' => 'สรุปผลและสะท้อนคิด', 'type' => 'PDF'],
+                ['title' => 'ชิ้นงาน AI สำหรับห้องเรียน', 'type' => 'งาน'],
+            ];
+        } elseif (str_contains(strtolower($courseCode . ' ' . $name), 'rob')) {
+            $rows = [
+                ['title' => 'ความรู้พื้นฐานหุ่นยนต์', 'type' => 'Video'],
+                ['title' => 'ไมโครคอนโทรลเลอร์และเซนเซอร์', 'type' => 'Slide'],
+                ['title' => 'Sensor และ Actuator', 'type' => 'Lab'],
+                ['title' => 'การควบคุมการเคลื่อนที่', 'type' => 'PDF'],
+                ['title' => 'โปรเจกต์หุ่นยนต์', 'type' => 'งาน'],
+            ];
+        } elseif (str_contains(strtolower($courseCode . ' ' . $name), 'web')) {
+            $rows = [
+                ['title' => 'โครงสร้างหน้าเว็บ HTML', 'type' => 'Slide'],
+                ['title' => 'จัดรูปแบบด้วย CSS', 'type' => 'Video'],
+                ['title' => 'Responsive Layout', 'type' => 'Lab'],
+                ['title' => 'แบบฝึกออกแบบหน้าเว็บ', 'type' => 'PDF'],
+                ['title' => 'Portfolio Website', 'type' => 'งาน'],
+            ];
+        } else {
+            $rows = [
+                ['title' => 'หลักการคิดเชิงคำนวณ', 'type' => 'Slide'],
+                ['title' => 'อัลกอริทึมและ Flowchart', 'type' => 'PDF'],
+                ['title' => 'การเขียนโปรแกรมแบบลำดับ', 'type' => 'Video'],
+                ['title' => 'ใบงานแก้ปัญหาในชีวิตประจำวัน', 'type' => 'Lab'],
+                ['title' => 'ชิ้นงานสรุปหน่วยการเรียนรู้', 'type' => 'งาน'],
+            ];
+        }
+    }
+
+    return array_slice($rows, 0, 5);
+}
+
+function school_type_badge_class(string $type): string
+{
+    return match (strtolower($type)) {
+        'video' => 'c2',
+        'lab', 'งาน', 'quiz' => 'c4',
+        'pdf' => 'c3',
+        default => 'c1',
+    };
+}
+
+function render_school_course_card(array $course, array $data, int $index): void
+{
+    $classes = ['c1', 'c2', 'c3', 'c4'];
+    $color = $classes[$index % count($classes)];
+    $lessons = school_course_lessons($course, $data);
+    $courseCode = (string)($course['code'] ?? '');
+    $level = course_level($course);
+    $weeks = max(5, count($lessons));
+    $credit = (string)($course['credit'] ?? '1.0 หน่วยกิต');
+    $progress = (int)($course['progress'] ?? 0);
+
+    ?><article class="school-course-card <?= e($color) ?>">
+        <div class="school-course-stripe"></div>
+        <div class="school-course-head">
+            <div class="school-course-icon"><?= icon($index % 2 === 0 ? 'course' : 'media') ?></div>
+            <div>
+                <div class="course-code"><?= e($courseCode) ?></div>
+                <h3><?= e((string)($course['name'] ?? 'รายวิชา')) ?></h3>
+            </div>
+        </div>
+        <div class="school-course-meta">
+            <span><?= e($level) ?></span>
+            <span><?= e($weeks) ?> บท</span>
+            <span><?= e($credit) ?></span>
+        </div>
+        <div class="school-lesson-list">
+            <?php foreach ($lessons as $lessonIndex => $lesson): ?>
+                <div class="school-lesson-row">
+                    <span class="school-lesson-no"><?= e($lessonIndex + 1) ?></span>
+                    <span><?= e((string)$lesson['title']) ?></span>
+                    <?php render_type_badge(school_type_badge_class((string)$lesson['type']), (string)$lesson['type']); ?>
+                </div>
+            <?php endforeach; ?>
+        </div>
+        <div class="school-progress-row">
+            <span>ความคืบหน้า</span>
+            <strong><?= e($progress) ?>%</strong>
+        </div>
+        <div class="school-card-footer">
+            <?php render_progress_bar($progress); ?>
+            <a class="button ghost" href="?page=learn&course=<?= e($courseCode) ?>"><?= icon('course') ?>เปิดวิชา</a>
+        </div>
+    </article><?php
+}
+
+function page_school_student_courses(array $data): void
+{
+    $courses = array_values($data['courses'] ?? []);
+    $terms = [];
+    foreach ($courses as $course) {
+        $term = (string)($course['term'] ?? '');
+        if ($term !== '') {
+            $terms[$term] = $term;
+        }
+    }
+    uksort($terms, fn (string $a, string $b): int => school_course_sort_key($b) <=> school_course_sort_key($a));
+
+    $activeTerm = (string)($_GET['term'] ?? '');
+    if ($activeTerm === '' || !isset($terms[$activeTerm])) {
+        $activeTerm = (string)array_key_first($terms);
+    }
+
+    $termCourses = array_values(array_filter($courses, fn (array $course): bool => (string)($course['term'] ?? '') === $activeTerm));
+    $lessonTotal = array_sum(array_map(fn (array $course): int => count(school_course_lessons($course, $data)), $termCourses));
+    $videoTotal = array_sum(array_map(fn (array $course): int => count(array_filter(school_course_lessons($course, $data), fn (array $lesson): bool => strtolower((string)$lesson['type']) === 'video')), $termCourses));
+    $labTotal = array_sum(array_map(fn (array $course): int => count(array_filter(school_course_lessons($course, $data), fn (array $lesson): bool => in_array(strtolower((string)$lesson['type']), ['lab', 'งาน', 'quiz'], true))), $termCourses));
+    $courseTabs = array_slice($termCourses, 0, 5);
+
+    ?><section class="school-term-shell">
+        <div class="school-term-title">เทอม <?= e($activeTerm) ?></div>
+        <div class="school-term-hero">
+            <div class="hero-badge">ภาคเรียนที่ <?= e($activeTerm) ?> · กำลังดำเนินการ</div>
+            <h2>สื่อการสอน</h2>
+            <div class="hero-gradient">กลุ่มสาระการเรียนรู้วิทยาศาสตร์และเทคโนโลยี</div>
+            <p>รวมสื่อ เอกสาร กิจกรรมการเรียนรู้ และรายวิชาที่นักเรียนในโรงเรียนเข้าถึงได้ตามภาคเรียน</p>
+            <nav class="school-term-tabs" aria-label="เลือกภาคเรียน">
+                <a class="active" href="?page=courses&term=<?= e($activeTerm) ?>"><?= icon('media') ?>สื่อการสอน</a>
+                <a href="?page=dashboard"><?= icon('dashboard') ?>หน้าหลัก</a>
+                <?php foreach ($courseTabs as $course): ?>
+                    <a href="?page=learn&course=<?= e((string)$course['code']) ?>"><?= e((string)$course['code']) ?></a>
+                <?php endforeach; ?>
+            </nav>
+        </div>
+        <nav class="school-semester-tabs" aria-label="เลือกเทอม">
+            <?php foreach (array_values($terms) as $term): ?>
+                <a class="<?= $term === $activeTerm ? 'active' : '' ?>" href="?page=courses&term=<?= e($term) ?>">เทอม <?= e($term) ?></a>
+            <?php endforeach; ?>
+        </nav>
+        <section class="stats-grid school-stats">
+            <?php render_stat_card('c1', 'course', 'รายวิชา', count($termCourses), 'รายวิชาของภาคเรียน'); ?>
+            <?php render_stat_card('c2', 'blog', 'สื่อการสอน', $lessonTotal, 'เอกสารและกิจกรรม'); ?>
+            <?php render_stat_card('c3', 'media', 'วิดีโอ', $videoTotal, 'คลิปการสอน'); ?>
+            <?php render_stat_card('c4', 'score', 'ใบงาน / Lab', $labTotal, 'งานฝึกและกิจกรรม'); ?>
+        </section>
+        <div class="school-section-head">
+            <h2>รายวิชาทั้งหมด</h2>
+            <span><?= e(count($termCourses)) ?> วิชา</span>
+        </div>
+        <?php if (count($termCourses) === 0): ?>
+            <article class="card c1"><h3>ยังไม่มีรายวิชาในเทอมนี้</h3><p>เมื่อครูเพิ่มรายวิชา ระบบจะแสดงแยกตามเทอมให้อัตโนมัติ</p></article>
+        <?php else: ?>
+            <section class="school-course-grid">
+                <?php foreach ($termCourses as $index => $course) render_school_course_card($course, $data, $index); ?>
+            </section>
+        <?php endif; ?>
+        <p class="school-term-note">กลุ่มสาระการเรียนรู้วิทยาศาสตร์และเทคโนโลยี · ภาคเรียนที่ <?= e($activeTerm) ?></p>
+    </section><?php
+}
+
 function render_chapter_row(array $chapter): void
 {
     ?><article class="chapter-row">
@@ -492,6 +684,11 @@ function page_dashboard(array $data): void
 function page_courses(array $data): void
 {
     $user = $data['current_user'];
+    if (($user['user_type'] ?? '') === 'school_student') {
+        page_school_student_courses($data);
+        return;
+    }
+
     $yearFilter = (string)($_GET['year'] ?? '');
     $termFilter = (string)($_GET['term'] ?? '');
     $levelFilter = (string)($_GET['level'] ?? '');
@@ -643,6 +840,20 @@ function page_learn(array $data): void
             break;
         }
     }
+    if ($course === null) {
+        foreach ($data['courses'] as $item) {
+            if (($item['code'] ?? '') === $courseCode) {
+                $course = $item + [
+                    'type' => 'school',
+                    'price' => 'ไม่มีค่าใช้จ่าย',
+                    'color' => 'c1',
+                    'audience' => 'เฉพาะนักเรียนในโรงเรียน',
+                    'enrollment' => 'เปิดจากรายวิชาในภาคเรียน',
+                ];
+                break;
+            }
+        }
+    }
 
     $user = $data['current_user'];
     $enrollment = null;
@@ -651,6 +862,10 @@ function page_learn(array $data): void
             $enrollment = $item;
             break;
         }
+    }
+    $isSchoolCourse = (($course['type'] ?? '') === 'school');
+    if ($isSchoolCourse && (($user['user_type'] ?? '') === 'school_student')) {
+        $enrollment = ['status' => 'active'];
     }
 
     if ($course === null) {

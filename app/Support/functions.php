@@ -532,7 +532,58 @@ function kru_data(): array
 
 function kru_course_materials(string $courseCode): array
 {
-    return array_values(array_filter(kru_seed()['course_materials'], fn (array $item): bool => ($item['course_code'] ?? '') === $courseCode));
+    $seed = kru_seed();
+    $materials = array_values(array_filter($seed['course_materials'], fn (array $item): bool => ($item['course_code'] ?? '') === $courseCode));
+    if (count($materials) > 0) {
+        return $materials;
+    }
+
+    $index = 1;
+    foreach ($seed['chapters'] as $chapter) {
+        if (($chapter['course'] ?? '') !== $courseCode) {
+            continue;
+        }
+        $materials[] = [
+            'course_code' => $courseCode,
+            'lesson_code' => $courseCode . '-CH' . sprintf('%02d', $index++),
+            'title' => (string)($chapter['title'] ?? 'บทเรียน'),
+            'material_type' => 'chapter',
+            'source_label' => (string)($chapter['type'] ?? 'บทเรียน'),
+            'source_title' => 'หน่วยการเรียนรู้',
+            'duration_minutes' => 30,
+        ];
+    }
+    foreach ($seed['media'] as $media) {
+        if (($media['course'] ?? '') !== $courseCode) {
+            continue;
+        }
+        $type = strtolower((string)($media['type'] ?? 'document'));
+        $materials[] = [
+            'course_code' => $courseCode,
+            'lesson_code' => $courseCode . '-ME' . sprintf('%02d', $index++),
+            'title' => (string)($media['title'] ?? 'สื่อการสอน'),
+            'material_type' => $type,
+            'source_label' => (string)($media['type'] ?? 'สื่อการสอน'),
+            'source_title' => 'คลังสื่อการสอน',
+            'duration_minutes' => $type === 'video' ? 20 : 15,
+        ];
+    }
+    foreach ($seed['assignments'] as $assignment) {
+        if (($assignment['course'] ?? '') !== $courseCode) {
+            continue;
+        }
+        $materials[] = [
+            'course_code' => $courseCode,
+            'lesson_code' => $courseCode . '-AS' . sprintf('%02d', $index++),
+            'title' => (string)($assignment['title'] ?? 'ใบงาน'),
+            'material_type' => 'assignment',
+            'source_label' => 'ใบงาน',
+            'source_title' => 'งานที่มอบหมาย',
+            'duration_minutes' => 35,
+        ];
+    }
+
+    return $materials;
 }
 
 function kru_user_course_progress(string $email, string $courseCode): array

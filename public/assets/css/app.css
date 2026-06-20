@@ -680,6 +680,277 @@ h3 {
   margin: 18px 0 22px;
 }
 
+.school-term-shell {
+  max-width: 1120px;
+  margin: 0 auto 48px;
+  padding: 26px 24px 56px;
+  background:
+    linear-gradient(color-mix(in srgb, var(--card) 64%, transparent), color-mix(in srgb, var(--card) 30%, transparent)),
+    linear-gradient(color-mix(in srgb, var(--accent1) 7%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in srgb, var(--accent1) 7%, transparent) 1px, transparent 1px);
+  background-size: auto, 40px 40px, 40px 40px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+}
+
+.school-term-title {
+  margin: 4px 0 24px;
+  text-align: center;
+  font-family: 'Kanit', sans-serif;
+  font-size: clamp(2.4rem, 7vw, 5rem);
+  font-weight: 300;
+  line-height: 1;
+  color: var(--text);
+}
+
+.school-term-hero {
+  padding: 28px 16px 10px;
+  text-align: center;
+}
+
+.school-term-hero h2 {
+  margin: 16px 0 2px;
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  line-height: 1.05;
+}
+
+.school-term-hero p {
+  max-width: 680px;
+  margin: 12px auto 24px;
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+.school-term-tabs,
+.school-semester-tabs {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.school-term-tabs {
+  margin-top: 24px;
+  padding-top: 18px;
+  border-top: 1px solid var(--border);
+}
+
+.school-term-tabs a,
+.school-semester-tabs a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 38px;
+  padding: 8px 13px;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  color: var(--muted);
+  font-family: 'Kanit', sans-serif;
+  font-size: 0.9rem;
+}
+
+.school-term-tabs a.active,
+.school-semester-tabs a.active {
+  color: var(--accent1);
+  background: color-mix(in srgb, var(--accent1) 9%, var(--card));
+  border-color: color-mix(in srgb, var(--accent1) 22%, var(--border));
+}
+
+.school-semester-tabs {
+  margin: 12px 0 24px;
+}
+
+.school-stats {
+  margin-top: 24px;
+}
+
+.school-section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  margin: 36px 0 18px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+.school-section-head h2 {
+  margin: 0;
+  font-size: 1.4rem;
+}
+
+.school-section-head span {
+  flex: 0 0 auto;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: var(--card);
+  color: var(--muted);
+  font-family: 'Kanit', sans-serif;
+  font-size: 0.88rem;
+}
+
+.school-course-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.school-course-card {
+  position: relative;
+  overflow: hidden;
+  min-height: 390px;
+  padding: 28px 18px 18px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  box-shadow: 0 22px 55px color-mix(in srgb, currentColor 10%, transparent);
+  transition: transform 180ms ease, box-shadow 180ms ease;
+}
+
+.school-course-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 28px 70px color-mix(in srgb, currentColor 15%, transparent);
+}
+
+.school-course-stripe {
+  position: absolute;
+  inset: 0 0 auto;
+  height: 4px;
+  background: currentColor;
+}
+
+.school-course-head {
+  display: grid;
+  grid-template-columns: 48px 1fr;
+  gap: 12px;
+  align-items: center;
+}
+
+.school-course-icon,
+.school-lesson-no {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  background: color-mix(in srgb, currentColor 10%, var(--card));
+  border: 1px solid color-mix(in srgb, currentColor 16%, var(--border));
+  color: currentColor;
+}
+
+.school-course-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+}
+
+.school-course-head h3 {
+  margin: 4px 0 0;
+  font-size: 1.05rem;
+  line-height: 1.35;
+}
+
+.school-course-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 18px 0 14px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 0.86rem;
+}
+
+.school-course-meta span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.school-course-meta span::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: currentColor;
+}
+
+.school-lesson-list {
+  display: grid;
+  gap: 8px;
+}
+
+.school-lesson-row {
+  display: grid;
+  grid-template-columns: 26px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 8px;
+  min-height: 38px;
+  padding: 6px 8px;
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--surface) 58%, var(--card));
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+
+.school-lesson-row > span:nth-child(2) {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.school-lesson-no {
+  width: 24px;
+  height: 24px;
+  border-radius: 8px;
+  font-family: 'Kanit', sans-serif;
+  font-size: 0.78rem;
+}
+
+.school-progress-row,
+.school-card-footer {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.school-progress-row {
+  justify-content: space-between;
+  margin-top: 18px;
+  color: var(--muted);
+  font-size: 0.86rem;
+}
+
+.school-progress-row strong {
+  color: var(--text);
+  font-family: 'Kanit', sans-serif;
+  font-weight: 500;
+}
+
+.school-card-footer {
+  margin-top: 8px;
+}
+
+.school-card-footer .progress {
+  flex: 1 1 auto;
+}
+
+.school-card-footer .button {
+  min-height: 36px;
+  padding: 7px 11px;
+  font-size: 0.84rem;
+  white-space: nowrap;
+}
+
+.school-term-note {
+  margin: 44px 0 0;
+  text-align: center;
+  color: var(--accent1);
+  font-family: 'Kanit', sans-serif;
+  font-size: 0.9rem;
+}
+
 .progress {
   height: 9px;
   border-radius: 999px;
@@ -918,6 +1189,7 @@ select {
   .stats-grid,
   .feature-grid,
   .course-grid,
+  .school-course-grid,
   .permission-grid,
   .split {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -992,10 +1264,28 @@ select {
   .stats-grid,
   .feature-grid,
   .course-grid,
+  .school-course-grid,
   .permission-grid,
   .split,
   .form-grid {
     grid-template-columns: 1fr;
+  }
+
+  .school-term-shell {
+    padding: 18px 12px 42px;
+  }
+
+  .school-section-head {
+    align-items: flex-start;
+  }
+
+  .school-lesson-row {
+    grid-template-columns: 26px minmax(0, 1fr);
+  }
+
+  .school-lesson-row .type-badge {
+    grid-column: 2;
+    width: max-content;
   }
 
   .section-label,
