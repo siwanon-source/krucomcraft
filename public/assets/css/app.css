@@ -737,11 +737,57 @@ h3 {
 }
 
 .school-term-status {
-  min-height: 44px;
-  padding: 9px 18px;
-  font-size: clamp(1rem, 2vw, 1.35rem);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  min-height: 58px;
+  padding: 10px 18px 10px 12px;
+  border: 1px solid color-mix(in srgb, var(--accent1) 20%, var(--border));
+  border-radius: 16px;
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--accent1) 11%, var(--card)), var(--card));
   color: var(--accent1);
-  box-shadow: 0 16px 36px color-mix(in srgb, var(--accent1) 10%, transparent);
+  box-shadow: 0 20px 45px color-mix(in srgb, var(--accent1) 13%, transparent);
+}
+
+.school-term-status.is-current {
+  border-color: color-mix(in srgb, var(--accent4) 26%, var(--border));
+}
+
+.school-term-status-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--accent1) 12%, var(--card));
+  color: var(--accent1);
+}
+
+.school-term-status-copy {
+  display: grid;
+  gap: 2px;
+  text-align: left;
+}
+
+.school-term-status-copy strong {
+  font-family: 'Kanit', sans-serif;
+  font-size: clamp(1.05rem, 2.2vw, 1.42rem);
+  font-weight: 600;
+  line-height: 1.15;
+  color: var(--text);
+}
+
+.school-term-status-copy small {
+  width: max-content;
+  padding: 3px 9px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--accent4) 11%, var(--card));
+  color: var(--accent4);
+  font-family: 'Kanit', sans-serif;
+  font-size: 0.82rem;
 }
 
 .school-term-hero h2 {
@@ -757,34 +803,73 @@ h3 {
   line-height: 1.7;
 }
 
-.school-term-picker,
+.school-term-menu,
 .school-term-tabs,
 .school-semester-tabs {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: 10px;
   flex-wrap: wrap;
 }
 
-.school-term-picker {
-  margin: 22px auto 0;
+.school-term-menu {
+  margin: 24px auto 0;
 }
 
-.school-term-picker label {
-  min-width: min(360px, 100%);
+.school-term-menu a {
+  position: relative;
+  display: grid;
+  min-width: 138px;
+  gap: 2px;
+  padding: 11px 16px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: color-mix(in srgb, var(--card) 92%, var(--surface));
   color: var(--muted);
-  text-align: left;
-  font-family: 'Kanit', sans-serif;
-  font-size: 0.88rem;
+  box-shadow: 0 16px 34px color-mix(in srgb, var(--accent1) 6%, transparent);
+  transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
 }
 
-.school-term-picker select {
-  margin-top: 6px;
-  border-radius: 999px;
-  text-align: center;
+.school-term-menu a:hover {
+  transform: translateY(-3px);
+  border-color: color-mix(in srgb, var(--accent1) 25%, var(--border));
+  box-shadow: 0 22px 48px color-mix(in srgb, var(--accent1) 10%, transparent);
+}
+
+.school-term-menu a.active {
   color: var(--accent1);
+  border-color: color-mix(in srgb, var(--accent1) 30%, var(--border));
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--accent1) 12%, var(--card)), var(--card));
+}
+
+.school-term-menu a.current::after {
+  content: '';
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--accent4);
+}
+
+.school-term-menu span,
+.school-term-menu small {
   font-family: 'Kanit', sans-serif;
+  font-size: 0.76rem;
+}
+
+.school-term-menu strong {
+  font-family: 'Kanit', sans-serif;
+  color: var(--text);
+  font-size: 1.05rem;
+  line-height: 1.2;
+}
+
+.school-term-menu small {
+  color: var(--accent4);
 }
 
 .school-term-tabs {

@@ -501,23 +501,25 @@ function page_school_student_courses(array $data): void
 
     ?><section class="school-term-shell">
         <div class="school-term-hero">
-            <div class="hero-badge school-term-status">ภาคเรียนที่ <?= e($activeTerm) ?><?= $isCurrentTerm ? ' · กำลังดำเนินการ' : '' ?></div>
+            <div class="school-term-status <?= $isCurrentTerm ? 'is-current' : '' ?>">
+                <span class="school-term-status-icon"><?= icon('course') ?></span>
+                <span class="school-term-status-copy">
+                    <strong>ภาคเรียนที่ <?= e($activeTerm) ?></strong>
+                    <?php if ($isCurrentTerm): ?><small>กำลังดำเนินการ</small><?php endif; ?>
+                </span>
+            </div>
             <h2>สื่อการสอน</h2>
             <div class="hero-gradient">กลุ่มสาระการเรียนรู้วิทยาศาสตร์และเทคโนโลยี</div>
             <p>รวมสื่อ เอกสาร กิจกรรมการเรียนรู้ และรายวิชาที่นักเรียนในโรงเรียนเข้าถึงได้ตามภาคเรียน</p>
-            <form method="get" class="school-term-picker">
-                <input type="hidden" name="page" value="courses">
-                <label>เลือกภาคเรียน
-                    <select name="term" onchange="this.form.submit()">
-                        <?php foreach (array_values($terms) as $term): ?>
-                            <option value="<?= e($term) ?>" <?= $term === $activeTerm ? 'selected' : '' ?>>ภาคเรียนที่ <?= e($term) ?><?= $term === $currentTerm ? ' · ปัจจุบัน' : '' ?></option>
-                        <?php endforeach; ?>
-                    </select>
-                </label>
-                <?php if ($activeTerm !== $currentTerm): ?>
-                    <a class="button ghost" href="?page=courses&term=<?= e($currentTerm) ?>"><?= icon('course') ?>กลับเทอมปัจจุบัน</a>
-                <?php endif; ?>
-            </form>
+            <nav class="school-term-menu" aria-label="ภาคเรียน">
+                <?php foreach (array_values($terms) as $term): ?>
+                    <a class="<?= $term === $activeTerm ? 'active' : '' ?> <?= $term === $currentTerm ? 'current' : '' ?>" href="?page=courses&term=<?= e($term) ?>">
+                        <span>ภาคเรียน</span>
+                        <strong><?= e($term) ?></strong>
+                        <?php if ($term === $currentTerm): ?><small>ปัจจุบัน</small><?php endif; ?>
+                    </a>
+                <?php endforeach; ?>
+            </nav>
         </div>
         <section class="stats-grid school-stats">
             <?php render_stat_card('c1', 'course', 'รายวิชา', count($termCourses), 'รายวิชาของภาคเรียน'); ?>
