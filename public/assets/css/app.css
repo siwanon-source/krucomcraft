@@ -732,7 +732,7 @@ h3 {
 }
 
 .school-term-hero {
-  padding: 18px 16px 10px;
+  padding: 18px 16px 8px;
   text-align: center;
 }
 
@@ -740,43 +740,51 @@ h3 {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 14px;
-  min-height: 58px;
-  padding: 10px 18px 10px 12px;
-  border: 1px solid color-mix(in srgb, var(--accent1) 20%, var(--border));
-  border-radius: 16px;
+  gap: 16px;
+  min-height: 76px;
+  padding: 12px 22px 12px 14px;
+  border: 1px solid color-mix(in srgb, var(--accent3) 26%, var(--border));
+  border-radius: 18px;
   background:
-    linear-gradient(135deg, color-mix(in srgb, var(--accent1) 11%, var(--card)), var(--card));
+    linear-gradient(135deg, color-mix(in srgb, var(--accent1) 9%, var(--card)), color-mix(in srgb, var(--accent3) 7%, var(--card)));
   color: var(--accent1);
-  box-shadow: 0 20px 45px color-mix(in srgb, var(--accent1) 13%, transparent);
+  box-shadow: 0 22px 52px color-mix(in srgb, var(--accent1) 12%, transparent);
 }
 
 .school-term-status.is-current {
-  border-color: color-mix(in srgb, var(--accent4) 26%, var(--border));
+  border-color: color-mix(in srgb, var(--accent4) 28%, var(--border));
 }
 
 .school-term-status-icon {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
-  border-radius: 14px;
+  width: 52px;
+  height: 52px;
+  border-radius: 16px;
   background: color-mix(in srgb, var(--accent1) 12%, var(--card));
   color: var(--accent1);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent1) 8%, transparent);
 }
 
 .school-term-status-copy {
   display: grid;
-  gap: 2px;
+  gap: 4px;
   text-align: left;
+}
+
+.school-term-status-copy > span {
+  color: var(--muted);
+  font-family: 'Kanit', sans-serif;
+  font-size: 0.86rem;
+  line-height: 1;
 }
 
 .school-term-status-copy strong {
   font-family: 'Kanit', sans-serif;
-  font-size: clamp(1.05rem, 2.2vw, 1.42rem);
+  font-size: clamp(1.55rem, 3vw, 2.05rem);
   font-weight: 600;
-  line-height: 1.15;
+  line-height: 1;
   color: var(--text);
 }
 
@@ -803,7 +811,131 @@ h3 {
   line-height: 1.7;
 }
 
-.school-term-menu,
+.school-term-dropdown,
+.school-term-tabs,
+.school-semester-tabs {
+  margin-inline: auto;
+}
+
+.school-term-dropdown {
+  position: relative;
+  width: min(360px, 100%);
+  margin-top: 24px;
+  text-align: left;
+}
+
+.school-term-dropdown summary {
+  display: grid;
+  grid-template-columns: 40px minmax(0, 1fr) 18px;
+  align-items: center;
+  gap: 12px;
+  min-height: 62px;
+  padding: 10px 14px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: color-mix(in srgb, var(--card) 94%, var(--surface));
+  color: var(--text);
+  cursor: pointer;
+  list-style: none;
+  box-shadow: 0 18px 42px color-mix(in srgb, var(--accent1) 9%, transparent);
+  transition: border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease;
+}
+
+.school-term-dropdown summary::-webkit-details-marker {
+  display: none;
+}
+
+.school-term-dropdown summary:hover {
+  transform: translateY(-2px);
+  border-color: color-mix(in srgb, var(--accent1) 25%, var(--border));
+  box-shadow: 0 24px 52px color-mix(in srgb, var(--accent1) 12%, transparent);
+}
+
+.school-term-dropdown[open] summary {
+  border-color: color-mix(in srgb, var(--accent1) 30%, var(--border));
+  border-radius: 16px 16px 12px 12px;
+}
+
+.school-term-dropdown-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 13px;
+  background: color-mix(in srgb, var(--accent1) 10%, var(--card));
+  color: var(--accent1);
+}
+
+.school-term-dropdown summary small {
+  display: block;
+  color: var(--muted);
+  font-family: 'Kanit', sans-serif;
+  font-size: 0.78rem;
+}
+
+.school-term-dropdown summary strong {
+  display: block;
+  margin-top: 2px;
+  font-family: 'Kanit', sans-serif;
+  font-size: 1.22rem;
+  line-height: 1;
+}
+
+.school-term-chevron {
+  width: 10px;
+  height: 10px;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  transform: rotate(45deg);
+  transition: transform 160ms ease;
+}
+
+.school-term-dropdown[open] .school-term-chevron {
+  transform: rotate(225deg);
+}
+
+.school-term-dropdown-menu {
+  position: absolute;
+  inset: calc(100% + 8px) 0 auto;
+  z-index: 20;
+  display: grid;
+  gap: 8px;
+  padding: 10px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: var(--card);
+  box-shadow: 0 24px 70px color-mix(in srgb, var(--accent1) 14%, transparent);
+}
+
+.school-term-dropdown-menu a {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 44px;
+  padding: 9px 12px;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  color: var(--muted);
+  font-family: 'Kanit', sans-serif;
+}
+
+.school-term-dropdown-menu a:hover,
+.school-term-dropdown-menu a.active {
+  color: var(--accent1);
+  border-color: color-mix(in srgb, var(--accent1) 18%, var(--border));
+  background: color-mix(in srgb, var(--accent1) 8%, var(--card));
+}
+
+.school-term-dropdown-menu small {
+  padding: 3px 9px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--accent4) 10%, var(--card));
+  color: var(--accent4);
+  font-size: 0.78rem;
+}
+
 .school-term-tabs,
 .school-semester-tabs {
   display: flex;
@@ -811,65 +943,6 @@ h3 {
   justify-content: center;
   gap: 10px;
   flex-wrap: wrap;
-}
-
-.school-term-menu {
-  margin: 24px auto 0;
-}
-
-.school-term-menu a {
-  position: relative;
-  display: grid;
-  min-width: 138px;
-  gap: 2px;
-  padding: 11px 16px;
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  background: color-mix(in srgb, var(--card) 92%, var(--surface));
-  color: var(--muted);
-  box-shadow: 0 16px 34px color-mix(in srgb, var(--accent1) 6%, transparent);
-  transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
-}
-
-.school-term-menu a:hover {
-  transform: translateY(-3px);
-  border-color: color-mix(in srgb, var(--accent1) 25%, var(--border));
-  box-shadow: 0 22px 48px color-mix(in srgb, var(--accent1) 10%, transparent);
-}
-
-.school-term-menu a.active {
-  color: var(--accent1);
-  border-color: color-mix(in srgb, var(--accent1) 30%, var(--border));
-  background:
-    linear-gradient(135deg, color-mix(in srgb, var(--accent1) 12%, var(--card)), var(--card));
-}
-
-.school-term-menu a.current::after {
-  content: '';
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  width: 8px;
-  height: 8px;
-  border-radius: 999px;
-  background: var(--accent4);
-}
-
-.school-term-menu span,
-.school-term-menu small {
-  font-family: 'Kanit', sans-serif;
-  font-size: 0.76rem;
-}
-
-.school-term-menu strong {
-  font-family: 'Kanit', sans-serif;
-  color: var(--text);
-  font-size: 1.05rem;
-  line-height: 1.2;
-}
-
-.school-term-menu small {
-  color: var(--accent4);
 }
 
 .school-term-tabs {

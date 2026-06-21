@@ -504,22 +504,32 @@ function page_school_student_courses(array $data): void
             <div class="school-term-status <?= $isCurrentTerm ? 'is-current' : '' ?>">
                 <span class="school-term-status-icon"><?= icon('course') ?></span>
                 <span class="school-term-status-copy">
-                    <strong>ภาคเรียนที่ <?= e($activeTerm) ?></strong>
+                    <span>ภาคเรียน</span>
+                    <strong><?= e($activeTerm) ?></strong>
                     <?php if ($isCurrentTerm): ?><small>กำลังดำเนินการ</small><?php endif; ?>
                 </span>
             </div>
             <h2>สื่อการสอน</h2>
             <div class="hero-gradient">กลุ่มสาระการเรียนรู้วิทยาศาสตร์และเทคโนโลยี</div>
             <p>รวมสื่อ เอกสาร กิจกรรมการเรียนรู้ และรายวิชาที่นักเรียนในโรงเรียนเข้าถึงได้ตามภาคเรียน</p>
-            <nav class="school-term-menu" aria-label="ภาคเรียน">
-                <?php foreach (array_values($terms) as $term): ?>
-                    <a class="<?= $term === $activeTerm ? 'active' : '' ?> <?= $term === $currentTerm ? 'current' : '' ?>" href="?page=courses&term=<?= e($term) ?>">
-                        <span>ภาคเรียน</span>
-                        <strong><?= e($term) ?></strong>
-                        <?php if ($term === $currentTerm): ?><small>ปัจจุบัน</small><?php endif; ?>
-                    </a>
-                <?php endforeach; ?>
-            </nav>
+            <details class="school-term-dropdown">
+                <summary>
+                    <span class="school-term-dropdown-icon"><?= icon('course') ?></span>
+                    <span>
+                        <small>ภาคเรียนที่แสดง</small>
+                        <strong><?= e($activeTerm) ?></strong>
+                    </span>
+                    <span class="school-term-chevron" aria-hidden="true"></span>
+                </summary>
+                <div class="school-term-dropdown-menu">
+                    <?php foreach (array_values($terms) as $term): ?>
+                        <a class="<?= $term === $activeTerm ? 'active' : '' ?> <?= $term === $currentTerm ? 'current' : '' ?>" href="?page=courses&term=<?= e($term) ?>">
+                            <span>ภาคเรียน <?= e($term) ?></span>
+                            <?php if ($term === $currentTerm): ?><small>ปัจจุบัน</small><?php endif; ?>
+                        </a>
+                    <?php endforeach; ?>
+                </div>
+            </details>
         </div>
         <section class="stats-grid school-stats">
             <?php render_stat_card('c1', 'course', 'รายวิชา', count($termCourses), 'รายวิชาของภาคเรียน'); ?>
